@@ -1,4 +1,4 @@
-Farmer Resource Assignment with PSO
+Farmer Resource Assignment with NSGA-II
 
 1. Java Parameter GUI
-2. Back-End processing with PSO(W-K-PSO)
+2. Back-End processing with NSGA-II
