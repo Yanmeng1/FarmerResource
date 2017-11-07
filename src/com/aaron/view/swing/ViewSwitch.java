@@ -63,26 +63,26 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 		
 		if (e.getActionCommand().equals("rigidConstraint")) {
 			if (fileFlag == false) {
-				int i = JOptionPane.showConfirmDialog(this.VF, "请打开或新建文件后添加约束", "欢迎使用", 0);
+				JOptionPane.showMessageDialog(this.VF, "请打开或新建文件后添加约束");
 				return;
 			}
 			dataView.rigidConstraint(this.guiParameter);
 			dataFlag = true;
 		} else if (e.getActionCommand().equals("singleConstraint")) {
 			if (dataFlag == false) {
-				int i = JOptionPane.showConfirmDialog(this.VF, "请优先添加刚性约束", "欢迎使用", 0);
+				JOptionPane.showMessageDialog(this.VF, "请优先添加刚性约束");
 				return;
 			}
 			dataView.singleConstraint(this.guiParameter);
 		} else if (e.getActionCommand().equals("elasticConstraint")) {
 			if (dataFlag == false) {
-				int i = JOptionPane.showConfirmDialog(this.VF, "请优先添加刚性约束", "欢迎使用", 0);
+				JOptionPane.showMessageDialog(this.VF, "请优先添加刚性约束");
 				return;
 			}
 			dataView.elasticConstraint(this.guiParameter);
 		} else if (e.getActionCommand().equals("saveConstraint")) {
 			if (dataFlag == false) {
-				int i = JOptionPane.showConfirmDialog(this.VF, "请优先添加刚性约束", "欢迎使用", 0);
+				JOptionPane.showMessageDialog(this.VF, "请优先添加刚性约束");
 				return;
 			}
 			dataView.saveConstraint(this.guiParameter);
@@ -185,7 +185,9 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 		    TableModel tableModel = tableInfo.getModel();
 		    tableModel.addTableModelListener(this);
 	        
-	        tableInfo.setPreferredScrollableViewportSize(new Dimension(800, 400));
+	        tableInfo.setPreferredScrollableViewportSize(new Dimension(500, 400));
+	        TableAtrribute.setTableHeaderWidth(tableInfo);
+	        
 			// 将表格加入到滚动条组件中
 		    JScrollPane scrollPane = new JScrollPane(tableInfo);
 		    

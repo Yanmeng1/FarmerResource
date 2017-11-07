@@ -1,7 +1,5 @@
 package com.aaron.view.swing;
 
-
-
 import javax.swing.JFrame;
 import javax.swing.JTable;
 
@@ -40,9 +38,6 @@ public class FileView {
 
 		return table;
 	}
-
-
-	
 }
 
 // 自定表格设置不可编辑状态

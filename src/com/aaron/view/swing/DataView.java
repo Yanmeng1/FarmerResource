@@ -1,28 +1,45 @@
 package com.aaron.view.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.aaron.data.parameter.GUIParameter;
 
-public class DataView implements TableModelListener {
+public class DataView implements TableModelListener, ActionListener {
 	
 	private JFrame jFrame;
+	// 刚性约束界面信息
 	private JPanel rigidPanel = null;
 	private JTable wightTable = null;
 	private JTable restrictTable = null;
-	
+	// 单个变量界面约束信息
 	private JPanel singlePanel = null;
 	private JTable singleTable = null;
+	// 其他弹性界面约束信息
+	private JPanel elasticPanel = null;
+	private JTable elasticTable = null;
+	private DefaultTableModel defaultModel = null;
 	
 	public DataView ( JFrame jFrame ) {
 		this.jFrame = jFrame;
@@ -91,10 +108,46 @@ public class DataView implements TableModelListener {
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
-
+	
 	public void elasticConstraint(GUIParameter guiParameter) {
-		// TODO Auto-generated method stub
 		System.out.println("其他约束");
+		if( elasticPanel == null ) {
+			String[] names = new String[ guiParameter.getIo().getSpecies() + 1 ];
+			names[0] = "约束类型";
+		    System.arraycopy(guiParameter.getIo().getSpeciesName(), 0, names, 1, guiParameter.getIo().getSpecies());
+			Object[][] tableContents = new Object[0][ guiParameter.getIo().getSpecies() + 1 ]; 
+			defaultModel = new DefaultTableModel(tableContents, names);
+			elasticTable = new JTable(defaultModel);
+			// 设置表格列的宽度值
+			TableAtrribute.setTableHeaderWidth(elasticTable);
+			elasticTable.setPreferredScrollableViewportSize(new Dimension(500,300));
+			JScrollPane jScrollpane = new JScrollPane(elasticTable);
+			jScrollpane.setViewportView(elasticTable);
+//			jScrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//			jScrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+			
+			JPanel buttonPanel = new JPanel();
+			JButton addButton = new JButton("添加行");
+			addButton.setActionCommand("addline");
+			addButton.addActionListener(this);
+			JButton deleteButton = new JButton("删除所选行");
+			deleteButton.setActionCommand("deleteline");
+			deleteButton.addActionListener(this);
+			
+			buttonPanel.add(addButton);
+			buttonPanel.add(deleteButton);
+			
+			Container contentPane = jFrame.getContentPane();
+			elasticPanel = new JPanel();
+			elasticPanel.setLayout(new BorderLayout());
+			elasticPanel.add(buttonPanel, BorderLayout.NORTH);
+			elasticPanel.add(jScrollpane, BorderLayout.CENTER);
+			contentPane.add(elasticPanel);
+		}
+		jFrame.setContentPane(elasticPanel);
+		jFrame.setTitle("其他约束");
+		jFrame.pack();//自适应组件大小
+		jFrame.setVisible(true);
 	}
 
 	public void saveConstraint(GUIParameter guiParameter) {
@@ -105,7 +158,32 @@ public class DataView implements TableModelListener {
 	public void tableChanged(TableModelEvent e) {
 		this.singlePanel = null;
 	}
-
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if( e.getActionCommand().equals("addline")) {
+			System.out.println("添加行");
+			// 在表格中添加JcomboBox
+			String[] constraintType = new String[]{" 0.0 < "," 0.0 = "};
+			JComboBox jcb = new JComboBox(constraintType);
+			TableColumn typeColumn = elasticTable.getColumnModel().getColumn(0);
+			typeColumn.setCellEditor(new DefaultCellEditor(jcb));
+			
+			Object[] rowContent = new Object[defaultModel.getColumnCount()];
+			rowContent[0] = "点击选择";
+			for (int i = 1; i<rowContent.length; i++) rowContent[i] = new Double(0.0);
+			defaultModel.addRow(rowContent);
+			
+		}
+		
+		if( e.getActionCommand().equals("deleteline")) {
+			System.out.println("删除行");
+			int numrow = elasticTable.getSelectedRow();
+			if (numrow == -1) JOptionPane.showMessageDialog(this.jFrame,"请选择要删除的行!");
+			else defaultModel.removeRow(numrow);
+		}
+	}
+	
 
 	
 }
