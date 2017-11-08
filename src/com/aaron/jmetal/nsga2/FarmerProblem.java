@@ -29,6 +29,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		this(44);
 	}
 	public FarmerProblem(int numberOfVariables) {
+		
 		guiParameter = Parameter.DeserializeParameter();
 		
 		// 设置问题的目标函数数量、变量数量、限制数量 以及 设置问题的名称
@@ -71,7 +72,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		for ( int i=0; i<this.getNumberOfVariables(); i++) {
 			Objectives[0] -= guiParameter.getIo().getMarginTarget()[i] * variables[i];
 			Objectives[1] += guiParameter.getIo().getCostTarget()[i] * variables[i];
-			Objectives[2] += guiParameter.getIo().getEnvironmentalTarget()[i] * variables[i];
+			Objectives[2] += guiParameter.getIo().getChemicalTarget()[i] * variables[i];
 			Objectives[3] -= guiParameter.getIo().getOutputTarget()[i] * variables[i];
 		}
 		
@@ -99,6 +100,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		constraint[1] = guiParameter.getTotalMaxLabour();
 		constraint[2] = guiParameter.getTotalMaxMachine();
 		constraint[3] = 0;
+		guiParameter.loadFertilizerRestrict();
 		for (int i=0; i<this.getNumberOfVariables(); i++){
 			constraint[0] -= guiParameter.getIo().getLandRestrict()[i] * variables[i];
 			constraint[1] -= guiParameter.getIo().getLabourRestrict()[i] * variables[i];
@@ -106,11 +108,12 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 			constraint[3] += guiParameter.getFertilizerRestrict()[i] * variables[i];
 		}
 		// 添加弹性约束
-		for(int i=4; i<this.getNumberOfConstraints(); i++){
-			constraint[i] = 0;
-			for(int j=0; j<this.getNumberOfVariables(); j++){
-				// other 容器是从 0 开始记的
-				constraint[i] += guiParameter.getOther1().get(i-4)[j] * guiParameter.getOther2().get(i-4)[j] * variables[i];
+		if ( this.getNumberOfConstraints() > 4) {
+			for (int i=4; i<this.getNumberOfConstraints(); i++) {
+				constraint[i] = guiParameter.getInequalityConstraints().get(i-4)[this.getNumberOfVariables()];
+				for (int j=0; j<this.getNumberOfVariables(); j++) {
+					constraint[i] += guiParameter.getInequalityConstraints().get(i-4)[j] * variables[i];
+				}
 			}
 		}
 		

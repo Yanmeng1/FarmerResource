@@ -20,11 +20,13 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.aaron.data.parameter.GUIParameter;
+import com.aaron.data.parameter.Parameter;
 
 public class DataView implements TableModelListener, ActionListener {
 	
@@ -112,10 +114,12 @@ public class DataView implements TableModelListener, ActionListener {
 	public void elasticConstraint(GUIParameter guiParameter) {
 		System.out.println("其他约束");
 		if( elasticPanel == null ) {
-			String[] names = new String[ guiParameter.getIo().getSpecies() + 1 ];
+			String[] names = new String[ guiParameter.getIo().getSpecies() + 2 ];
+			// 设置第一个和最后一个字段为约束类型和常数
 			names[0] = "约束类型";
+			names[names.length-1] = "常数";
 		    System.arraycopy(guiParameter.getIo().getSpeciesName(), 0, names, 1, guiParameter.getIo().getSpecies());
-			Object[][] tableContents = new Object[0][ guiParameter.getIo().getSpecies() + 1 ]; 
+			Object[][] tableContents = new Object[0][ guiParameter.getIo().getSpecies() + 2 ]; 
 			defaultModel = new DefaultTableModel(tableContents, names);
 			elasticTable = new JTable(defaultModel);
 			// 设置表格列的宽度值
@@ -152,7 +156,59 @@ public class DataView implements TableModelListener, ActionListener {
 
 	public void saveConstraint(GUIParameter guiParameter) {
 		// TODO Auto-generated method stub
-		System.out.println("保存约束");
+		System.out.println("保存参数");
+		
+		// 将面板上的数据装载到GUIParameter中
+		
+		// 获取weightTable和restrict表格参数
+		for ( int i = 0 ; i < guiParameter.getWeight().length; i++) {
+			guiParameter.setWeight(i, Double.valueOf(this.wightTable.getValueAt(0, i+1).toString()));
+		}
+		guiParameter.setTotalMaxLands(Double.valueOf(this.restrictTable.getValueAt(0, 1).toString()));
+		guiParameter.setTotalMaxLabour(Double.valueOf(this.restrictTable.getValueAt(0, 2).toString()));
+		guiParameter.setTotalMaxMachine(Double.valueOf(this.restrictTable.getValueAt(0, 3).toString()));
+		// 获取singleTable面板参数
+		if (singleTable != null) {
+			for ( int i=0; i<guiParameter.getNumberOfVariables(); i++) {
+				guiParameter.setMinLandByNo(i, Double.valueOf(this.singleTable.getValueAt(i, 2).toString()));
+				guiParameter.setMaxLandByNo(i, Double.valueOf(this.singleTable.getValueAt(i, 3).toString()));
+			}
+		}
+		// 获取elasticalTable参数面板信息
+		if ( elasticTable != null && elasticTable.getRowCount() > 0) {
+			int rowNum = elasticTable.getRowCount();
+			for ( int i=0; i<rowNum; i++ ) {
+				double[] constraints = new double[guiParameter.getNumberOfVariables() + 1];
+				for(int j=0; j<constraints.length; j++) 
+					constraints[j] = Double.valueOf(this.elasticTable.getValueAt(i, j+1).toString());
+//				System.out.println(elasticTable.getValueAt(i, 0).toString());
+				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 < ")) {
+					System.out.println("添加不等式约束");
+					guiParameter.getInequalityConstraints().add(constraints);
+				}
+				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 = ")) {
+					System.out.println("添加等式约束");
+					guiParameter.getEqualityConstraints().add(constraints);
+				}
+			}
+			// 将等式约束转换为不等式约束
+			if( guiParameter.getNumberOfEqualityConstraints() > 0 ) {
+				for (int i=0; i<guiParameter.getNumberOfEqualityConstraints(); i++)
+				{
+					double[] equalConstraint1 = new double[guiParameter.getNumberOfVariables()+1];
+					double[] equalConstraint2 = new double[guiParameter.getNumberOfVariables()+1];
+					for (int j=0; j<guiParameter.getNumberOfVariables()+1; j++) {
+						equalConstraint1[j] = guiParameter.getEqualityConstraints().get(i)[j];
+						equalConstraint2[j] = -guiParameter.getEqualityConstraints().get(i)[j];
+					}
+					guiParameter.getInequalityConstraints().add(equalConstraint1);
+					guiParameter.getInequalityConstraints().add(equalConstraint2);
+				}
+			}
+		}
+		
+		// 将guiParameter序列化
+		Parameter.SerializeGUIParameter(guiParameter);
 	}
 	@Override
 	public void tableChanged(TableModelEvent e) {
@@ -171,6 +227,7 @@ public class DataView implements TableModelListener, ActionListener {
 			
 			Object[] rowContent = new Object[defaultModel.getColumnCount()];
 			rowContent[0] = "点击选择";
+			
 			for (int i = 1; i<rowContent.length; i++) rowContent[i] = new Double(0.0);
 			defaultModel.addRow(rowContent);
 			

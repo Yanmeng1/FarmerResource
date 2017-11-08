@@ -21,7 +21,7 @@ public class IOParameter implements Serializable{
 	private double[] costTarget;
 	private double[] marginTarget;
 	private double[] outputTarget;
-	private double[] environmentalTarget;
+	private double[] chemicalTarget;
 	// 5 个约束
 	private double[] labourRestrict;
 	private double[] machineRestrcit;
@@ -49,7 +49,7 @@ public class IOParameter implements Serializable{
 		costTarget = new double[speciesNum];
 		marginTarget = new double[speciesNum];
 		outputTarget = new double[speciesNum];
-		environmentalTarget = new double[speciesNum];
+		chemicalTarget = new double[speciesNum];
 		
 		labourRestrict = new double[speciesNum];
 		machineRestrcit = new double[speciesNum];
@@ -63,7 +63,7 @@ public class IOParameter implements Serializable{
 			costTarget[row] = readLines.get(row+1)[2].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[2]);
 			marginTarget[row] = readLines.get(row+1)[3].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[3]);
 			outputTarget[row] = readLines.get(row+1)[4].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[4]);
-			environmentalTarget[row] = readLines.get(row+1)[5].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[5]);
+			chemicalTarget[row] = readLines.get(row+1)[5].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[5]);
 			labourRestrict[row] = readLines.get(row+1)[6].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[6]);
 			machineRestrcit[row] = readLines.get(row+1)[7].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[7]);
 			landRestrict[row] = readLines.get(row+1)[8].equals("") ? 0.0 : Double.parseDouble(readLines.get(row+1)[8]);
@@ -133,12 +133,12 @@ public class IOParameter implements Serializable{
 		this.outputTarget[index] = outputTarget;
 	}
 
-	public double[] getEnvironmentalTarget() {
-		return environmentalTarget;
+	public double[] getChemicalTarget() {
+		return chemicalTarget;
 	}
 
-	public void setEnvironmentalTarget(int index, Double chemicalTarget) {
-		this.environmentalTarget[index] = chemicalTarget;
+	public void setChemicalTarget(int index, Double chemicalTarget) {
+		this.chemicalTarget[index] = chemicalTarget;
 	}
 
 	public double[] getLabourRestrict() {

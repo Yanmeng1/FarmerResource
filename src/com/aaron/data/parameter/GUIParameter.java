@@ -11,7 +11,6 @@ public class GUIParameter implements Serializable{
 	// 1.读入界面+修改参数 -> 通过界面修改参数存入到IOParameter对象中;
 	  // 粪便产生量大于粪便使用量 -> io对象变化进行约束 FertilizerRestrict = output - input >= 0
 	private IOParameter io;
-	private double[] FertilizerRestrict;
 	
 /********************作为后台要传的参数*********************/
 	// 2.刚性约束
@@ -21,6 +20,7 @@ public class GUIParameter implements Serializable{
 	private double totalMaxLands;
 	private double totalMaxLabour;
 	private double totalMaxMachine;
+	private double[] FertilizerRestrict;
 	
 	// 3.每个变量的约束：默认[0:totalMaxLand] -> 界面通过  添加单个变量限制窗口
 	private Double[] maxLand, minLand;
@@ -31,8 +31,7 @@ public class GUIParameter implements Serializable{
 	// 5. 计数
 	private int numberOfObjectives;
 	private int numberOfVariables;
-	private int numberOfInequalityConstraints;
-	private int numberOfEqualityConstraints;
+	private int numberOfConstraints;
 	
 	/**
 	 * 创建GUIParameter对象，接收文件IO参数,引用传递所以后边对ioParameter的修改会作用到这个上面
@@ -43,8 +42,7 @@ public class GUIParameter implements Serializable{
 		
 		this.numberOfObjectives = 4;
 		this.numberOfVariables = ioParameter.getSpecies();
-		this.numberOfInequalityConstraints = 4;
-		this.numberOfInequalityConstraints = 0;
+		this.numberOfConstraints = 4;
 		this.weight = new double[4];
 		//利益最大化 -
 		//成本最小化 +
@@ -53,7 +51,7 @@ public class GUIParameter implements Serializable{
 		this.FertilizerRestrict = new double[ioParameter.getSpecies()];
 		this.maxLand = new Double[ioParameter.getSpecies()];
 		this.minLand = new Double[ioParameter.getSpecies()];
-		this.equalityConstraints = new ArrayList<double[]>();
+		this.equalityConstraints = new ArrayList<double[]>();    // 将等式约束转换为不等式约束
 		this.inequalityConstraints = new ArrayList<double[]>();
 	}
 
@@ -61,8 +59,13 @@ public class GUIParameter implements Serializable{
 		return weight;
 	}
 
-	public void setWeight(double[] weight) {
-		this.weight = weight;
+	/**
+	 * 设置参数
+	 * @param index
+	 * @param value
+	 */
+	public void setWeight(int index, double value) {
+		this.weight[index] = value;
 	}
 
 	public IOParameter getIo() {
@@ -123,10 +126,12 @@ public class GUIParameter implements Serializable{
 	 * 有机肥生产量 >= 有机肥使用量 fertilizer = output - input >= 0 
 	 * @return double[] 限制条件 output - input
 	 */
-	public double[] getFertilizerRestrict() {
+	public void loadFertilizerRestrict() {
 		for(int i=0; i<this.io.getSpecies(); i++){
 			this.FertilizerRestrict[i] = this.io.getFertilizerOutput()[i] - this.io.getFertilizerInput()[i];
 		}
+	}
+	public double[] getFertilizerRestrict() {
 		return FertilizerRestrict;
 	}
 
@@ -147,18 +152,30 @@ public class GUIParameter implements Serializable{
 	public int getNumberOfObjectives(){
 		return numberOfObjectives;
 	}
-	/**
-	 * 获取约束数量
-	 * @return int 4刚性约束 + 弹性约束
-	 */
+	
 	public int getNumberOfEqualityConstraints(){
 		if ( equalityConstraints == null || equalityConstraints.size() == 0 ) return 0;
 		else return equalityConstraints.size();
 	}
 	
-	public int GetNumberOfInequalityConstraints() {
+	public int getNumberOfInequalityConstraints() {
 		if ( inequalityConstraints == null || inequalityConstraints.size() == 0 ) 
 			return 0;
 		else return inequalityConstraints.size();
+	}
+	/**
+	 * 返回约束个数 四个基本约束 + 输入约束
+	 * @return
+	 */
+	public int getNumberOfConstraints(){
+		return 4 + getNumberOfInequalityConstraints();
+	}
+	
+	
+	public List<double[]> getInequalityConstraints() {
+		return this.inequalityConstraints;
+	}
+	public List<double [] > getEqualityConstraints() {
+		return this.equalityConstraints;
 	}
 }

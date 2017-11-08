@@ -127,7 +127,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 					this.ioParameter.setCostTarget(row, Double.valueOf(this.tableInfo.getValueAt(row, 2).toString()));
 					this.ioParameter.setMarginTarget(row, Double.valueOf(this.tableInfo.getValueAt(row, 3).toString()));
 					this.ioParameter.setOutputTarget(row, Double.valueOf(this.tableInfo.getValueAt(row, 4).toString()));
-					this.ioParameter.setEnvironmentalTarget(row, Double.valueOf(this.tableInfo.getValueAt(row, 5).toString()));
+					this.ioParameter.setChemicalTarget(row, Double.valueOf(this.tableInfo.getValueAt(row, 5).toString()));
 					this.ioParameter.setLabourRestrict(row, Double.valueOf(this.tableInfo.getValueAt(row, 6).toString()));
 					this.ioParameter.setMachineRestrcit(row, Double.valueOf(this.tableInfo.getValueAt(row, 7).toString()));
 					this.ioParameter.setLandRestrict(row, Double.valueOf(this.tableInfo.getValueAt(row, 8).toString()));

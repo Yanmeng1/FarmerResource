@@ -27,7 +27,7 @@ public class FileView {
 			tableContents[row][2] = ioParameter.getCostTarget()[row];
 			tableContents[row][3] = ioParameter.getMarginTarget()[row];
 			tableContents[row][4] = ioParameter.getOutputTarget()[row];
-			tableContents[row][5] = ioParameter.getEnvironmentalTarget()[row];
+			tableContents[row][5] = ioParameter.getChemicalTarget()[row];
 			tableContents[row][6] = ioParameter.getLabourRestrict()[row];
 			tableContents[row][7] = ioParameter.getMachineRestrcit()[row];
 			tableContents[row][8] = ioParameter.getLandRestrict()[row];
