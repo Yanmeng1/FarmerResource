@@ -1,5 +1,7 @@
 package com.aaron.view.swing;
-
+/**
+ * 菜单 ： 数据面板
+ */
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -47,13 +49,13 @@ public class DataView implements TableModelListener, ActionListener {
 		this.jFrame = jFrame;
 	}
 	/**
-	 * 刚性约束
+	 * 数据-刚性约束
 	 * @param guiParameter
 	 */
 	public void rigidConstraint(GUIParameter guiParameter) {
 		System.out.println("刚性约束");
 		if(rigidPanel == null) {
-		String[] names1 = {"目标函数","利润","投入成本","环境","粮食产量"};
+		String[] names1 = {"目标函数","利润","投入成本","化肥","粮食产量"};
 		Object[][] tableContent1 = {{" 权重", new Double(0.0), new Double(0.0), new Double(0.0), new Double(0.0)}};
 		String[] names2 = {"约束","土地面积","劳动力","农业机械"};
 		Object[][] tableContent2 = {{" 最大值", new Double(0.0), new Double(0.0), new Double(0.0)}};
@@ -86,17 +88,22 @@ public class DataView implements TableModelListener, ActionListener {
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
-
+	
+	/**
+	 * 数据-单个变量
+	 * @param guiParameter
+	 */
 	public void singleConstraint(GUIParameter guiParameter) {
 		System.out.println("单个变量");
 		if ( singlePanel == null ) {
 			String[] names = {"序号","种类","最小值","最大值"};
 			Object[][] tableContents = new Object[guiParameter.getIo().getSpecies()][4];
+			guiParameter.setTotalMaxLands(Double.parseDouble(restrictTable.getValueAt(0, 1).toString()));
 			for (int row=0; row<guiParameter.getIo().getSpecies(); row++){
 				tableContents[row][0] = guiParameter.getIo().getNo()[row]; 
 				tableContents[row][1] = guiParameter.getIo().getSpeciesName()[row];
 				tableContents[row][2] = new Double(0.0);
-				tableContents[row][3] = new Double(Double.parseDouble(restrictTable.getValueAt(0, 1).toString()));
+				tableContents[row][3] = guiParameter.getMaxLand()[row ];
 			}
 			singleTable = new MyTable(tableContents, names);
 			singleTable.setPreferredScrollableViewportSize(new Dimension(400,400));
@@ -110,7 +117,10 @@ public class DataView implements TableModelListener, ActionListener {
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
-	
+	/**
+	 * 数据-其他约束
+	 * @param guiParameter
+	 */
 	public void elasticConstraint(GUIParameter guiParameter) {
 		System.out.println("其他约束");
 		if( elasticPanel == null ) {
@@ -118,7 +128,10 @@ public class DataView implements TableModelListener, ActionListener {
 			// 设置第一个和最后一个字段为约束类型和常数
 			names[0] = "约束类型";
 			names[names.length-1] = "常数";
-		    System.arraycopy(guiParameter.getIo().getSpeciesName(), 0, names, 1, guiParameter.getIo().getSpecies());
+//		    System.arraycopy(guiParameter.getIo().getSpeciesName(), 0, names, 1, guiParameter.getIo().getSpecies());
+		    for(int i=1; i<names.length-1; i++) {
+		    	names[i] = " "+i+" "+ guiParameter.getIo().getSpeciesName()[i-1];
+		    }
 			Object[][] tableContents = new Object[0][ guiParameter.getIo().getSpecies() + 2 ]; 
 			defaultModel = new DefaultTableModel(tableContents, names);
 			elasticTable = new JTable(defaultModel);
@@ -154,6 +167,10 @@ public class DataView implements TableModelListener, ActionListener {
 		jFrame.setVisible(true);
 	}
 
+	/**
+	 * 数据-保存参数
+	 * @param guiParameter
+	 */
 	public void saveConstraint(GUIParameter guiParameter) {
 		// TODO Auto-generated method stub
 		System.out.println("保存参数");
@@ -180,14 +197,20 @@ public class DataView implements TableModelListener, ActionListener {
 			for ( int i=0; i<rowNum; i++ ) {
 				double[] constraints = new double[guiParameter.getNumberOfVariables() + 1];
 				for(int j=0; j<constraints.length; j++) 
+				{
 					constraints[j] = Double.valueOf(this.elasticTable.getValueAt(i, j+1).toString());
+					if( constraints[j] < 0 ) System.out.println(constraints[j] + " -4 ="+(constraints[j]-4) );
+				}
+				
 //				System.out.println(elasticTable.getValueAt(i, 0).toString());
 				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 < ")) {
 					System.out.println("添加不等式约束");
+					guiParameter.setInequalityConstraintsEmpty();
 					guiParameter.getInequalityConstraints().add(constraints);
 				}
 				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 = ")) {
 					System.out.println("添加等式约束");
+					guiParameter.setEqualityConstriantsEmpty();
 					guiParameter.getEqualityConstraints().add(constraints);
 				}
 			}
@@ -199,20 +222,23 @@ public class DataView implements TableModelListener, ActionListener {
 					double[] equalConstraint2 = new double[guiParameter.getNumberOfVariables()+1];
 					for (int j=0; j<guiParameter.getNumberOfVariables()+1; j++) {
 						equalConstraint1[j] = guiParameter.getEqualityConstraints().get(i)[j];
-						equalConstraint2[j] = -guiParameter.getEqualityConstraints().get(i)[j];
+						if (equalConstraint1[j] == 0.0) equalConstraint2[j] = 0.0;
+						else equalConstraint2[j] = -guiParameter.getEqualityConstraints().get(i)[j];
 					}
 					guiParameter.getInequalityConstraints().add(equalConstraint1);
 					guiParameter.getInequalityConstraints().add(equalConstraint2);
 				}
 			}
 		}
-		
 		// 将guiParameter序列化
 		Parameter.SerializeGUIParameter(guiParameter);
+		this.jFrame.setTitle("保存完毕");
 	}
+	
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		this.singlePanel = null;
+		
 	}
 	
 	@Override

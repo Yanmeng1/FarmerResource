@@ -112,7 +112,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 			for (int i=4; i<this.getNumberOfConstraints(); i++) {
 				constraint[i] = guiParameter.getInequalityConstraints().get(i-4)[this.getNumberOfVariables()];
 				for (int j=0; j<this.getNumberOfVariables(); j++) {
-					constraint[i] += guiParameter.getInequalityConstraints().get(i-4)[j] * variables[i];
+					constraint[i] += (guiParameter.getInequalityConstraints().get(i-4)[j] * variables[j]);
 				}
 			}
 		}
@@ -122,7 +122,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		int violatedConstraints = 0;
 		for( int i=0; i<this.getNumberOfConstraints(); i++) {
 			if ( constraint[i] < 0 ) {
-				overallConstraintViolation += constraint[i];
+				overallConstraintViolation += 1.5*constraint[i];
 				violatedConstraints++;
 			}
 		}

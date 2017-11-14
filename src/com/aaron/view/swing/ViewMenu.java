@@ -77,10 +77,26 @@ public class ViewMenu {
 	}
 
 
-
+	/**
+	 * 运行求解
+	 * @return
+	 */
 	private JMenu createResultMenu() {
-		JMenu resultMenu = new JMenu("运行求解");
-		// TODO Auto-generated method stub
+		JMenu resultMenu = new JMenu("运行");
+		JMenuItem item1 = new JMenuItem("运行数据");
+		JMenuItem item2 = new JMenuItem("饼状图");
+		JMenuItem item3 = new JMenuItem("柱状图");
+		
+		item1.addActionListener(viewSwitch);
+		item1.setActionCommand("runData");
+		item2.addActionListener(viewSwitch);
+		item2.setActionCommand("pieData");
+		item3.addActionListener(viewSwitch);
+		item3.setActionCommand("barData");
+		
+		resultMenu.add(item1);
+//		resultMenu.add(item2);
+//		resultMenu.add(item3);
 		return resultMenu;
 	}
 

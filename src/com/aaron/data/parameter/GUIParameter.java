@@ -80,14 +80,15 @@ public class GUIParameter implements Serializable{
 		return totalMaxLands;
 	}
 	/**
-	 * 设置最大耕种面积 后 直接对每个变量进行初始化限制[0,totalMaxLand]
+	 * 设置最大耕种面积 后 直接对每个变量进行初始化限制[0,totalMaxLand] or [0,0]
 	 * @param totalMaxLands
 	 */
 	public void setTotalMaxLands(double totalMaxLands) {
 		this.totalMaxLands = totalMaxLands;
 		for(int i=0; i < this.io.getSpecies(); i++){
-			this.maxLand[i] = totalMaxLands;
 			this.minLand[i] = 0.0;
+			if ( this.io.getCostTarget()[i] > 0.0 ) this.maxLand[i] = totalMaxLands / this.getIo().getLandRestrict()[i];
+			else this.maxLand[i] = 0.0;
 		}
 	}
 	/**
@@ -177,5 +178,12 @@ public class GUIParameter implements Serializable{
 	}
 	public List<double [] > getEqualityConstraints() {
 		return this.equalityConstraints;
+	}
+	
+	public void setInequalityConstraintsEmpty() {
+		this.inequalityConstraints.clear();
+	}
+	public void setEqualityConstriantsEmpty() {
+		this.equalityConstraints.clear();
 	}
 }

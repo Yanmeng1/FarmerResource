@@ -1,6 +1,5 @@
 package com.aaron.view.swing;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,15 +24,19 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 	private JFrame VF;
 	private ViewMenu vm;
 	private String path = null;
-	
+	// 文件 按钮
 	private FileView fileView = null;
 	private JTable tableInfo = null;
 	private IOParameter ioParameter = null;
 	private GUIParameter guiParameter = null;
 	private boolean fileFlag = false;
 	
+	// 数据 按钮
 	private DataView dataView = null;
 	private boolean dataFlag = false;
+	
+	// 运行 按钮
+	private ResultView resultView = null;
 	
 	public ViewSwitch( JFrame vf ){
 		this.VF = vf;
@@ -58,9 +61,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 			exitFile();
 		}
 		
-		
 		// 数据菜单按钮 - 优先判断年数据按钮有没有准备好 fileFlag = true;
-		
 		if (e.getActionCommand().equals("rigidConstraint")) {
 			if (fileFlag == false) {
 				JOptionPane.showMessageDialog(this.VF, "请打开或新建文件后添加约束");
@@ -86,13 +87,24 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 				return;
 			}
 			dataView.saveConstraint(this.guiParameter);
-			
 		}
 		
-		
-		// 求解按钮
-		
-		// 图表按钮
+		// 运行按钮
+		if (e.getActionCommand().equals("runData")) {
+			resultView = new ResultView(VF);
+		} else if (e.getActionCommand().equals("pieData")) {
+			if (resultView == null) {
+				JOptionPane.showMessageDialog(this.VF, "请运行数据后生成饼图");
+				return;
+			}
+			resultView.showPie();
+		} else if (e.getActionCommand().equals("barData")) {
+			if (resultView == null ) {
+				JOptionPane.showMessageDialog(this.VF, "请运行数据后生成柱状图");
+				return;
+			}
+			resultView.showBar();
+		}
 		
 		// 帮助
 	}
@@ -147,7 +159,8 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 				this.VF.setTitle("修改生效");
 				this.VF.pack();
 				this.VF.setVisible(true);
-				
+				// 合并有机肥
+				this.guiParameter.loadFertilizerRestrict();
 				this.fileFlag = true;
 			} catch (Exception e) {
 				int i = JOptionPane.showConfirmDialog(this.VF, "输入数据有误，请检查数据后保存！", "欢迎使用", 0);
@@ -164,7 +177,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 		System.out.println("打开文件");
 	     JFileChooser jfc=new JFileChooser();  
 	     jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );  
-	     jfc.showDialog(new JLabel(), "选择");  
+	     jfc.showDialog(this.VF, "选择");  
 	     File file=jfc.getSelectedFile();  
 	     if(file.isDirectory()){  
 				int i = JOptionPane.showConfirmDialog(this.VF, "请选择scv文件", "欢迎使用", 0);
