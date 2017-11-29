@@ -51,7 +51,7 @@ public class ViewMenu {
 		fileMenu.addActionListener(viewSwitch);
 		fileMenu.setActionCommand("loadData");
 		
-		this.jFrame.setTitle("菜 单");
+		this.jFrame.setTitle("现代生态农场优化决策支持模拟系统");
 		this.jFrame.setContentPane(loadDataPanel);
 		this.jFrame.setJMenuBar(menuBar);
 		this.jFrame.setVisible(true);

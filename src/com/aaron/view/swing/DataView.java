@@ -84,7 +84,7 @@ public class DataView implements TableModelListener, ActionListener {
 		}
 		
 		jFrame.setContentPane(rigidPanel);
-		jFrame.setTitle("添加刚性约束");
+//		jFrame.setTitle("现代农场资源配置系统");
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
@@ -113,7 +113,7 @@ public class DataView implements TableModelListener, ActionListener {
 			singlePanel.add(JSP);
 		}
 		jFrame.setContentPane(singlePanel);
-		jFrame.setTitle("单个变量约束");
+//		jFrame.setTitle("现代农场资源配置系统");
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
@@ -162,7 +162,7 @@ public class DataView implements TableModelListener, ActionListener {
 			contentPane.add(elasticPanel);
 		}
 		jFrame.setContentPane(elasticPanel);
-		jFrame.setTitle("其他约束");
+//		jFrame.setTitle("现代农场资源配置系统");
 		jFrame.pack();//自适应组件大小
 		jFrame.setVisible(true);
 	}
@@ -175,6 +175,9 @@ public class DataView implements TableModelListener, ActionListener {
 		// TODO Auto-generated method stub
 		System.out.println("保存参数");
 		
+		// 将file文件中的邮寄费约束添加到GUIParameter中
+		guiParameter.loadFertilizerRestrict();
+		
 		// 将面板上的数据装载到GUIParameter中
 		
 		// 获取weightTable和restrict表格参数
@@ -184,6 +187,8 @@ public class DataView implements TableModelListener, ActionListener {
 		guiParameter.setTotalMaxLands(Double.valueOf(this.restrictTable.getValueAt(0, 1).toString()));
 		guiParameter.setTotalMaxLabour(Double.valueOf(this.restrictTable.getValueAt(0, 2).toString()));
 		guiParameter.setTotalMaxMachine(Double.valueOf(this.restrictTable.getValueAt(0, 3).toString()));
+
+
 		// 获取singleTable面板参数
 		if (singleTable != null) {
 			for ( int i=0; i<guiParameter.getNumberOfVariables(); i++) {
@@ -192,25 +197,27 @@ public class DataView implements TableModelListener, ActionListener {
 			}
 		}
 		// 获取elasticalTable参数面板信息
+		
+		// 每次的点保存的时候置空 guiParameter中的约束，重新获取面板中的约束
+		guiParameter.setInequalityConstraintsEmpty();
+		guiParameter.setEqualityConstriantsEmpty();
+		
 		if ( elasticTable != null && elasticTable.getRowCount() > 0) {
 			int rowNum = elasticTable.getRowCount();
+			// 单行添加
 			for ( int i=0; i<rowNum; i++ ) {
 				double[] constraints = new double[guiParameter.getNumberOfVariables() + 1];
 				for(int j=0; j<constraints.length; j++) 
 				{
 					constraints[j] = Double.valueOf(this.elasticTable.getValueAt(i, j+1).toString());
-					if( constraints[j] < 0 ) System.out.println(constraints[j] + " -4 ="+(constraints[j]-4) );
 				}
-				
 //				System.out.println(elasticTable.getValueAt(i, 0).toString());
 				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 < ")) {
-					System.out.println("添加不等式约束");
-					guiParameter.setInequalityConstraintsEmpty();
+					System.out.println(" 0.0 < 添加不等式约束");
 					guiParameter.getInequalityConstraints().add(constraints);
 				}
 				if ( elasticTable.getValueAt(i, 0).toString().equals(" 0.0 = ")) {
-					System.out.println("添加等式约束");
-					guiParameter.setEqualityConstriantsEmpty();
+					System.out.println(" 0.0 = 添加等式约束");
 					guiParameter.getEqualityConstraints().add(constraints);
 				}
 			}
@@ -232,7 +239,7 @@ public class DataView implements TableModelListener, ActionListener {
 		}
 		// 将guiParameter序列化
 		Parameter.SerializeGUIParameter(guiParameter);
-		this.jFrame.setTitle("保存完毕");
+//		this.jFrame.setTitle("现代农场资源配置系统");
 	}
 	
 	@Override

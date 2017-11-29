@@ -156,7 +156,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 				this.VF.setContentPane(scrollPane);
 				
 				// 再将滚动条组件添加到中间容器中
-				this.VF.setTitle("修改生效");
+				this.VF.setTitle("现代生态农场优化决策支持模拟系统");
 				this.VF.pack();
 				this.VF.setVisible(true);
 				// 合并有机肥
@@ -207,7 +207,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 		    this.VF.setContentPane(scrollPane);
 		    
 		    // 再将滚动条组件添加到中间容器中
-		    this.VF.setTitle("载入表格数据");
+		    this.VF.setTitle("现代生态农场优化决策支持模拟系统");
 		    this.VF.pack();
 		    this.VF.setVisible(true);
 	     }  
@@ -245,7 +245,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		System.out.println(e.getFirstRow()+" : "+e.getColumn()+" = > "+"changed");
-		this.VF.setTitle("修改未保存");
+		this.VF.setTitle("现代生态农场优化决策支持模拟系统");
 		this.fileFlag = false;
 	}
 

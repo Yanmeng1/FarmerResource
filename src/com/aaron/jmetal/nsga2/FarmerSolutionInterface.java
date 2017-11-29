@@ -27,7 +27,7 @@ public class FarmerSolutionInterface{
     List<DoubleSolution> population;
     
     public FarmerSolutionInterface(){
-    	this(250000,100);
+    	this(500000,100);
     }
     
     public FarmerSolutionInterface(int iteratorTimes, int populationSize){

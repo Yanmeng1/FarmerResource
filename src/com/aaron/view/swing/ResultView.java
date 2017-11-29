@@ -56,16 +56,20 @@ public class ResultView {
 //				bestSolutionValue = tempSolutionValue;
 //			}
 //		}
-		
+		System.out.println("---------------------Objectives---------------------");
 		for (int i=0; i<bestSolution.getNumberOfObjectives(); i++) {
 			double objective = bestSolution.getObjective(i) >= 0 ? bestSolution.getObjective(i) : -bestSolution.getObjective(i);
 			objective = objective / guiParameter.getWeight()[i];
 			System.out.println(" Objective "+ (i+1) + " Value " +objective);
-			
 		}
+		System.out.println("---------------------variables---------------------");
+		double sum = 0;
 		for (int i =0; i<bestSolution.getNumberOfVariables(); i++) {
-			System.out.println( " == variables "+ (i+1) + " Value " + bestSolution.getVariableValueString(i));
+			double temp = Double.parseDouble(bestSolution.getVariableValueString(i)) * guiParameter.getIo().getLandRestrict()[i];
+			System.out.println( " == variable "+ (i+1) + " Value " + temp);
+			sum += temp;
 		}
+		System.out.println("==== sum "+ sum);
 	}
 	
 	public void testGUIParameter() {
@@ -90,14 +94,14 @@ public class ResultView {
 		System.out.println();
 		System.out.println("------------------------限制-----------------------------");
 		System.out.println("-------total land "+guiParameter.getTotalMaxLands());
-		System.out.println("---------total Labour "+guiParameter.getTotalMaxLabour());
+		System.out.println("-------total Labour "+guiParameter.getTotalMaxLabour());
 		System.out.println("-------total michine "+guiParameter.getTotalMaxMachine());
-		System.out.println(" ---------------有机肥限制 ：");
+		System.out.println(" ---------------有机肥限制 ----------------------");
 		for (int i=0; i<guiParameter.getFertilizerRestrict().length; i++) {
 			System.out.print(" "+guiParameter.getFertilizerRestrict()[i]);
 		}
 		System.out.println();
-		System.out.println(" ---------------等式限制 ：");
+		System.out.println(" ---------------等式限制---------------------");
 		for (int i=0; i<guiParameter.getEqualityConstraints().size(); i++) {
 			for (int j=0; j<guiParameter.getEqualityConstraints().get(0).length; j++) {
 				System.out.print("  "+guiParameter.getEqualityConstraints().get(i)[j]);
@@ -105,12 +109,13 @@ public class ResultView {
 			System.out.println("---");
 		}
 		System.out.println();
-		System.out.println(" ---------------不等式限制 ：");
+		System.out.println(" ---------------不等式限制--------------------");
 		for (int i=0; i<guiParameter.getInequalityConstraints().size(); i++) {
 			for (int j=0; j<guiParameter.getInequalityConstraints().get(0).length; j++) {
 				System.out.print("  "+guiParameter.getInequalityConstraints().get(i)[j]);
 			}
 			System.out.println("---");
 		}
+		System.out.println("=============================配置参数完毕=====================================");
 	}
 }

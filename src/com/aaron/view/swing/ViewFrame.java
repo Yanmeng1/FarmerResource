@@ -1,5 +1,9 @@
 package com.aaron.view.swing;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,19 +22,32 @@ public class ViewFrame extends JFrame {
 
 	public ViewFrame(int x, int y) {
 		
-		this.viewPanel = (JPanel) this.getContentPane();
+		JPanel GImage = new JPanel() {  
+            protected void paintComponent(Graphics g) {  
+                ImageIcon icon = new ImageIcon("./data/test.png");  
+                Image img = icon.getImage();  
+                g.drawImage(img, 0, 0, width,  
+                		height, icon.getImageObserver());  
+//                this.setSize(icon.getIconWidth(), icon.getIconHeight()); 
+            }  
+        };  
+        
 		
-		this.titleMessage = new JLabel("现代农场资源配置系统", 0);
-		this.titleMessage.setFont(new Font("宋体", 1, 35));
-		
-		this.viewPanel.add(this.titleMessage);
-		this.setTitle("欢迎使用");
+//        this.viewPanel = (JPanel) this.getContentPane();
+//		this.titleMessage = new JLabel("现代生态农场优化决策支持模拟系统", 0);
+//		this.titleMessage.setFont(new Font("宋体", 1, 26));
+//		
+//		this.viewPanel.add(this.titleMessage);
+        
+        this.setContentPane(GImage);
+		this.setTitle("现代生态农场优化决策支持模拟系统");
 		
 		this.setBounds(x, y, this.width, this.height);
+	
 		this.setDefaultCloseOperation(3);
 		this.setVisible(true);
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(8000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

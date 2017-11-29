@@ -42,7 +42,7 @@ public class GUIParameter implements Serializable{
 		
 		this.numberOfObjectives = 4;
 		this.numberOfVariables = ioParameter.getSpecies();
-		this.numberOfConstraints = 4;
+		this.numberOfConstraints = 5;
 		this.weight = new double[4];
 		//利益最大化 -
 		//成本最小化 +
@@ -87,7 +87,9 @@ public class GUIParameter implements Serializable{
 		this.totalMaxLands = totalMaxLands;
 		for(int i=0; i < this.io.getSpecies(); i++){
 			this.minLand[i] = 0.0;
-			if ( this.io.getCostTarget()[i] > 0.0 ) this.maxLand[i] = totalMaxLands / this.getIo().getLandRestrict()[i];
+			if ( this.io.getCostTarget()[i] > 0.0 )
+				if (this.getIo().getLandRestrict()[i] != 0.0) this.maxLand[i] = totalMaxLands / this.getIo().getLandRestrict()[i];
+				else this.maxLand[i] = this.maxLand[i-1];
 			else this.maxLand[i] = 0.0;
 		}
 	}
@@ -169,7 +171,7 @@ public class GUIParameter implements Serializable{
 	 * @return
 	 */
 	public int getNumberOfConstraints(){
-		return 4 + getNumberOfInequalityConstraints();
+		return this.numberOfConstraints + getNumberOfInequalityConstraints();
 	}
 	
 	

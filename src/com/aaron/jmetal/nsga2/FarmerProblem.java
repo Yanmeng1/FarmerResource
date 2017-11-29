@@ -68,13 +68,20 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		Objectives[0] = 0;	//利益最大化 -
 		Objectives[1] = 0;	//成本最小化 +
 		Objectives[2] = 0;	//化肥最小化 +
+		double fertilizerRset = 0;
 		Objectives[3] = 0;	//粮食产量最大化 -
 		for ( int i=0; i<this.getNumberOfVariables(); i++) {
 			Objectives[0] -= guiParameter.getIo().getMarginTarget()[i] * variables[i];
 			Objectives[1] += guiParameter.getIo().getCostTarget()[i] * variables[i];
 			Objectives[2] += guiParameter.getIo().getChemicalTarget()[i] * variables[i];
+			fertilizerRset += guiParameter.getFertilizerRestrict()[i] * variables[i];
 			Objectives[3] -= guiParameter.getIo().getOutputTarget()[i] * variables[i];
 		}
+		Objectives[2] -= fertilizerRset;
+		
+//		for (int i=0 ; i<this.getNumberOfObjectives(); i++) {
+//			Objectives[i] = 0-Objectives[i];
+//		}
 		
 		// 向方案solution 中添加目标函数
 		for ( int i=0; i<this.getNumberOfObjectives(); i++ ) {
@@ -97,22 +104,26 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		
 		// 添加刚性约束 土地限制、劳动力限制、农业机械限制、肥料限制
 		constraint[0] = guiParameter.getTotalMaxLands();
+		constraint[4] = 0;
 		constraint[1] = guiParameter.getTotalMaxLabour();
 		constraint[2] = guiParameter.getTotalMaxMachine();
 		constraint[3] = 0;
 		guiParameter.loadFertilizerRestrict();
 		for (int i=0; i<this.getNumberOfVariables(); i++){
+			// sum(lands) == maxLand
 			constraint[0] -= guiParameter.getIo().getLandRestrict()[i] * variables[i];
 			constraint[1] -= guiParameter.getIo().getLabourRestrict()[i] * variables[i];
 			constraint[2] -= guiParameter.getIo().getMachineRestrcit()[i] * variables[i];
 			constraint[3] += guiParameter.getFertilizerRestrict()[i] * variables[i];
 		}
+		constraint[4] = 0 - constraint[0];
+		
 		// 添加弹性约束
-		if ( this.getNumberOfConstraints() > 4) {
-			for (int i=4; i<this.getNumberOfConstraints(); i++) {
-				constraint[i] = guiParameter.getInequalityConstraints().get(i-4)[this.getNumberOfVariables()];
+		if ( this.getNumberOfConstraints() > 5) {
+			for (int i=5; i<this.getNumberOfConstraints(); i++) {
+				constraint[i] = guiParameter.getInequalityConstraints().get(i-5)[this.getNumberOfVariables()];
 				for (int j=0; j<this.getNumberOfVariables(); j++) {
-					constraint[i] += (guiParameter.getInequalityConstraints().get(i-4)[j] * variables[j]);
+					constraint[i] += (guiParameter.getInequalityConstraints().get(i-5)[j] * variables[j]);
 				}
 			}
 		}
@@ -122,7 +133,7 @@ public class FarmerProblem extends AbstractDoubleProblem implements ConstrainedP
 		int violatedConstraints = 0;
 		for( int i=0; i<this.getNumberOfConstraints(); i++) {
 			if ( constraint[i] < 0 ) {
-				overallConstraintViolation += 1.5*constraint[i];
+				overallConstraintViolation += constraint[i];
 				violatedConstraints++;
 			}
 		}
