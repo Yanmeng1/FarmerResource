@@ -1,16 +1,19 @@
 package com.aaron.view.swing;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -22,8 +25,8 @@ import com.aaron.data.parameter.IOParameter;
 
 public class ViewSwitch implements ActionListener, MouseListener, TableModelListener {
 	private JFrame VF;
-	private ViewMenu vm;
 	private String path = null;
+
 	// 文件 按钮
 	private FileView fileView = null;
 	private JTable tableInfo = null;
@@ -40,7 +43,7 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 	
 	public ViewSwitch( JFrame vf ){
 		this.VF = vf;
-		this.vm = new ViewMenu(vf, this);
+		new ViewMenu(vf, this);
 		this.dataView = new DataView(vf);
 	}
 	
@@ -91,27 +94,27 @@ public class ViewSwitch implements ActionListener, MouseListener, TableModelList
 		
 		// 运行按钮
 		if (e.getActionCommand().equals("runData")) {
-			resultView = new ResultView(VF);
+			resultView = new ResultView();
+			resultView.showWaitImage(VF);
+//			resultView.showresult(VF);
 		} else if (e.getActionCommand().equals("pieData")) {
 			if (resultView == null) {
 				JOptionPane.showMessageDialog(this.VF, "请运行数据后生成饼图");
 				return;
 			}
-			resultView.showPie();
+			System.out.println("show pie");
+			resultView.showPie(VF);
 		} else if (e.getActionCommand().equals("barData")) {
 			if (resultView == null ) {
 				JOptionPane.showMessageDialog(this.VF, "请运行数据后生成柱状图");
 				return;
 			}
-			resultView.showBar();
+			System.out.println("show bar ");
+			resultView.showBar(VF);
 		}
-		
 		// 帮助
 	}
 
-	
-	
-	
 	private void exitFile() {
 		// TODO Auto-generated method stub
 		System.out.println("退出文件");

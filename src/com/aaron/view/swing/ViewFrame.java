@@ -1,5 +1,4 @@
 package com.aaron.view.swing;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -7,10 +6,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-
 
 public class ViewFrame extends JFrame {
 	
@@ -24,30 +19,27 @@ public class ViewFrame extends JFrame {
 		
 		JPanel GImage = new JPanel() {  
             protected void paintComponent(Graphics g) {  
-                ImageIcon icon = new ImageIcon("./data/test.png");  
+                ImageIcon icon = new ImageIcon("./data/farmer5.jpeg");  
                 Image img = icon.getImage();  
                 g.drawImage(img, 0, 0, width,  
                 		height, icon.getImageObserver());  
 //                this.setSize(icon.getIconWidth(), icon.getIconHeight()); 
             }  
         };  
-        
 		
 //        this.viewPanel = (JPanel) this.getContentPane();
 //		this.titleMessage = new JLabel("现代生态农场优化决策支持模拟系统", 0);
 //		this.titleMessage.setFont(new Font("宋体", 1, 26));
-//		
 //		this.viewPanel.add(this.titleMessage);
         
         this.setContentPane(GImage);
 		this.setTitle("现代生态农场优化决策支持模拟系统");
-		
 		this.setBounds(x, y, this.width, this.height);
-	
 		this.setDefaultCloseOperation(3);
+		this.setResizable(false);
 		this.setVisible(true);
 		try {
-			Thread.sleep(8000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

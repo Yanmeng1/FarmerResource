@@ -23,7 +23,7 @@ public class FarmerSolutionInterface{
     MutationOperator<DoubleSolution> mutation;  
     SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;  
     Algorithm<List<DoubleSolution>> algorithm; 
-    
+    AlgorithmRunner algorithmRunner = null;
     List<DoubleSolution> population;
     
     public FarmerSolutionInterface(){
@@ -60,10 +60,15 @@ public class FarmerSolutionInterface{
           mutation, selection, evaluator); 
 */  
         //用AlgorithmRunner运行算法  
-        AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();  
+        algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();  
         //获取结果集  
         population = algorithm.getResult();  
 //        long computingTime = algorithmRunner.getComputingTime();  
+    }
+    
+    // 获取进度条
+    public long getEvaluationTime() { 
+    		return  algorithmRunner.getComputingTime();
     }
     
     public List<DoubleSolution> getPopulation(){

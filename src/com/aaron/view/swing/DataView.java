@@ -3,7 +3,6 @@ package com.aaron.view.swing;
  * 菜单 ： 数据面板
  */
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -18,12 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -56,8 +52,10 @@ public class DataView implements TableModelListener, ActionListener {
 		System.out.println("刚性约束");
 		if(rigidPanel == null) {
 		String[] names1 = {"目标函数","利润","投入成本","化肥","粮食产量"};
+		@SuppressWarnings("deprecation")
 		Object[][] tableContent1 = {{" 权重", new Double(0.0), new Double(0.0), new Double(0.0), new Double(0.0)}};
 		String[] names2 = {"约束","土地面积","劳动力","农业机械"};
+		@SuppressWarnings("deprecation")
 		Object[][] tableContent2 = {{" 最大值", new Double(0.0), new Double(0.0), new Double(0.0)}};
 		
 		wightTable = new RigidTable(tableContent1, names1);
@@ -93,6 +91,7 @@ public class DataView implements TableModelListener, ActionListener {
 	 * 数据-单个变量
 	 * @param guiParameter
 	 */
+	@SuppressWarnings("deprecation")
 	public void singleConstraint(GUIParameter guiParameter) {
 		System.out.println("单个变量");
 		if ( singlePanel == null ) {
@@ -273,14 +272,11 @@ public class DataView implements TableModelListener, ActionListener {
 			else defaultModel.removeRow(numrow);
 		}
 	}
-	
-
-	
 }
 
 //自定表格设置不可编辑状态
 class RigidTable extends JTable{
-	
+	private static final long serialVersionUID = -3746259586066404451L;
 	public RigidTable(Object[][] tableContents, String[] names){
 		super(tableContents, names);
 	}
