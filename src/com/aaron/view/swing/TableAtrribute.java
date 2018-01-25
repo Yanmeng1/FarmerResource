@@ -7,7 +7,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 public class TableAtrribute {
-
 	
 	/**
 	 * 设置列表头的宽度

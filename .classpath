@@ -11,7 +11,6 @@
 	<classpathentry kind="lib" path="lib/jmetal-core-5.3.jar" sourcepath="/var/folders/x8/kv3tfxqd39s5g9s2d10k4p_h0000gn/T/.org.sf.feeling.decompiler1508985929710/source/jmetal-core-5.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jmetal-exec-5.3.jar"/>
 	<classpathentry kind="lib" path="lib/jmetal-problem-5.3.jar"/>
-	<classpathentry kind="lib" path="lib/beautyeye_lnf.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="output" path="bin"/>

@@ -19,7 +19,7 @@ public class ViewFrame extends JFrame {
 		
 		JPanel GImage = new JPanel() {  
             protected void paintComponent(Graphics g) {  
-                ImageIcon icon = new ImageIcon("./data/farmer5.jpeg");  
+                ImageIcon icon = new ImageIcon("./data/welcome.jpg");  
                 Image img = icon.getImage();  
                 g.drawImage(img, 0, 0, width,  
                 		height, icon.getImageObserver());  
